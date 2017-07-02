@@ -104,6 +104,11 @@ def send_message():
         new_chat = chatMessage(text,True)
         friends[friend_choice].chats.append(new_chat)
         print "\nYour secret message has been created and ready for use!"
+        #appending messages to a text file
+        file = open("message.txt", "a")
+        file.write(text)
+        file.write(",")
+        file.close()
     else:
         print "\nIt seems you didn\'t enter the secret message. Please try again!!!"
 
@@ -119,6 +124,7 @@ def read_message():
     #decode the secret message using an image
     output_path = raw_input("What is the name of the output file? ")
     secret_text = Steganography.decode(output_path)
+    print secret_text
 
     #if spy sends any SOS message
     if secret_text == "SOS" or secret_text =="SAVE ME" or secret_text == "HELP ME":
@@ -127,8 +133,12 @@ def read_message():
         new_chat = chatMessage(secret_text,False)
         friends[sender].chats.append(new_chat)
         #displaying the secret text
-        print "Your secret message is " + colored(secret_text,"blue")
+        print "Your decoded secret message is " + colored(secret_text,"blue")
 
+    #reading messages from the file
+    file = open("message.txt","r")
+    str = file.read()
+    print "Messages stored in file are: %s" % colored(str,"blue")
 
 
 
@@ -202,6 +212,9 @@ def read_chat_history():
 
 # function defined for starting the chat
 def start_chat(spy):
+    file = open("message.txt","w")
+    file.close()
+
     #no current message
     current_status_message = None
 
